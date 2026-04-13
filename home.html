@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<head>
+<style>
+    #testo1 {
+        color: blue;
+    }
+    </style>
+</head>
+<html>
+    <body >
+        <h1>test per login e registrazione</h1>
+        <button id="togglbtn">mosta7nascondi</button>
+        <form id="signup">
+            <p>inserire username</p>
+            <input id="nome" name="nome" type="text" >
+            
+            <p>inserire email</p>
+            <input type="text" name="email" id="email">
+            <p>inserire password</p>
+            <input id="password" name="password" type="text"><br>
+            <button type="submit">invia</button>
+        </form>
+       <p id="testo1" > Pagina principale</h1> 
+        <p id="risultato">POLLO</p>
+       <canvas id="canvas1"></canvas>
+
+    </body>
+
+
+
+
+    <script>
+        document.getElementById("signup").addEventListener("submit", function (e){
+            e.preventDefault();
+            const formData=new FormData(this);
+            fetch( "insert.php",{
+                method: "POST",
+            body: formData})
+                 .then(response => response.text())
+    .then(data => {
+        document.getElementById("risultato").innerHTML = data;
+        this.reset(); // pulisce il form
+    })
+            })
+
+            const togglbtn=document.getElementById("togglebtn")
+            const form=document.getElementById("signup")
+            togglbtn.addEventListener(click, () =>{
+                if(form.style.display="none"){
+                    form.style.display="block"
+                }
+                else {
+                    form.style.display="none"
+                }
+            })
+    </script>
+
+</html>
