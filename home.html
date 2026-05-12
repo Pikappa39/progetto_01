@@ -1,184 +1,195 @@
 <!DOCTYPE html>
+
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    #testo1 {
-        color: blue;
-    }
+    <style>
+        #testo1 {
+            color: blue;
+        }
     </style>
 </head>
 <html>
-    <body >
-        <h1>test per login e registrazione</h1>
-        <div class="container">
-            <div class="row justify-content-end">
-                <div class="col-md-4">
-                    <div id="user-menu" style="display:none;">
-    👤 <span id="username"></span>
 
-    <div class="dropdown">
-        <button id="userIcon">Menu</button>
+<body>
+    <h1>test per login e registrazione</h1>
+    <div class="container">
+        <div class="row justify-content-end">
+            <div class="col-md-4">
+                <div id="user-menu" style="display:none;">
+                    👤 <span id="username"></span>
 
-        <div class="dropdown-menu">
-            <a href="#">Profilo</a>
-            <a href="logout.php">Logout</a>
-        </div>
-    </div>
-</div>
-<div id="signin-signup">
-        <button id="togglebtn" style="margin-top:20px; color: rgb(1, 133, 248);">Accedi/Registrati</button>
-    <button id="signinbtn" style="margin-top:20px; color: rgb(1, 133, 248);">Accedi</button>
-        <form id="signup" class="position-absolute" style="display:none; margin-top:20px;">
-            <p>inserire username</p>
-            <input id="nome" name="nome" type="text" >
-            
-            <p>inserire email</p>
-            <input type="email" name="email" id="email">
-             <p>conferma email</p>
-            <input type="email" name="email2" id="email2">
-            <p>inserire password</p>
-            <input id="password" name="password" type="password" required><br>
-               <p>conferma password</p>
-            <input id="password2" name="password2" type="password" required><br>
-            <button type="submit">invia</button>
-        </form>
-        <form id="signin" class="position-absolute" style="display:none">
+                    <div class="dropdown">
+
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            Menu
+                        </button>
+
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Profilo</a></li>
+                            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+                <div id="signin-signup">
+                    <button id="togglebtn" style="margin-top:20px; color: rgb(1, 133, 248);">Accedi/Registrati</button>
+                    <button id="signinbtn" style="margin-top:20px; color: rgb(1, 133, 248);">Accedi</button>
+                    <form id="signup" class="position-absolute" style="display:none; margin-top:20px;">
+                        <p>inserire username</p>
+                        <input id="nome" name="nome" type="text">
+
+                        <p>inserire email</p>
+                        <input type="email" name="email" id="email">
+                        <p>conferma email</p>
+                        <input type="email" name="email2" id="email2">
+                        <p>inserire password</p>
+                        <input id="password" name="password" type="password" required><br>
+                        <p>conferma password</p>
+                        <input id="password2" name="password2" type="password" required><br>
+                        <button type="submit">invia</button>
+                    </form>
+                    <form id="signin" class="position-absolute" style="display:none">
                         <p>inserire email</p>
                         <input type="email" name="email3" id="email3">
-                         <p>inserire password</p>
+                        <p>inserire password</p>
                         <input id="password3" name="password3" type="password" required><br>
                         <button type="submit">invia</button>
                     </form>
-     </div>
-        </div>
-            </div>
                 </div>
-            <p id="testo1">testo di prova</p>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+            </div>
+        </div>
+    </div>
+    <p id="testo1">testo di prova</p>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 
 
 
 
-    <script>
-        function checkLogin() {
+<script>
+    function checkLogin() {
 
-    fetch("check_login.php")
-    .then(res => res.json())
-    .then(data => {
+        fetch("check_login.php")
+            .then(res => res.json())
+            .then(data => {
 
-        if (data.logged=== true) {
-            alert(data.logged)
-            document.getElementById("signin-signup").style.display = "none";
-            document.getElementById("user-menu").style.display = "block";
-            document.getElementById("username").innerText = data.nome;
-        } else {
-            alert(data.logged)
-            document.getElementById("signin-signup").style.display = "block";
-            document.getElementById("user-menu").style.display = "none";
-        }
+                if (data.logged === true) {
+                    alert(data.logged)
+                    document.getElementById("signin-signup").style.display = "none";
+                    document.getElementById("user-menu").style.display = "block";
+                    document.getElementById("username").innerText = data.nome;
+                } else {
+                    alert("falsouiu" + data.logged)
+                    console.log(getComputedStyle(document.getElementById("signin-signup")).display);
+
+                    document.getElementById("signin-signup").style.display = "block";
+                    document.getElementById("user-menu").style.display = "none";
+                }
+
+            });
+
+    }
+    window.addEventListener("load", () => {
+
+        checkLogin();
 
     });
 
-}
-window.addEventListener("load", () => {
+    //funzione per inviare i dati del form di registrazione al server
+    document.getElementById("signup").addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!this.checkValidity()) {
+            this.reportValidity(); // mostra errori
+            return;
+        }
+        const formData = new FormData(this);
+        fetch("signup.php", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.text())
+            .then(data => {
 
-    checkLogin();
-
-});
-
-        //funzione per inviare i dati del form di registrazione al server
-        document.getElementById("signup").addEventListener("submit", function (e){
-            e.preventDefault();
-              if (!this.checkValidity()) {
-        this.reportValidity(); // mostra errori
-        return;
-    }
-            const formData=new FormData(this);
-            fetch( "signup.php",{
-                method: "POST",
-            body: formData})
-                 .then(response => response.text())
-    .then(data => {
-     
-        this.reset(); // pulisce il form
+                this.reset(); // pulisce il form
+            })
     })
-            })
-            //funzione per inviare i dati del form di login al server
-            document.getElementById("signin").addEventListener("submit", function (e){
-                e.preventDefault();
-                  if (!this.checkValidity()) {
-                    this.reportValidity();
-                    return;}
-                const formData=new FormData(this);
-                fetch( "signin.php",{
-                    method: "POST",
-                    body:formData})
-                    .then(response=>response.text())
-                    .then(data=>{
-                        if (data==="Login OK"){
-                            alert("pollo"+data)
-                            checkLogin();
-                        }
-                        else{
-                            alert("ERRORE"+data)
+    //funzione per inviare i dati del form di login al server
+    document.getElementById("signin").addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!this.checkValidity()) {
+            this.reportValidity();
+            return;
+        }
+        const formData = new FormData(this);
+        fetch("signin.php", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.text())
+            .then(data => {
+                if (data === "Login OK") {
+                    alert("pollo" + data)
+                    checkLogin();
+                }
+                else {
+                    alert("ERRORE" + data)
 
-                        document.getElementById("testo1").textContent=data;
-                        }
-                        this.reset();
-                    })
-                })
-//funzione per mostrare o nascondere il form di registrazione
-            const togglbtn=document.getElementById("togglebtn")
-            const form=document.getElementById("signup")
-            const form2=document.getElementById("signin");
-            togglbtn.addEventListener("click", () =>{
-                if (form2.style.display==="block"){
-                    form2.style.display="none"
-                };
-                if(form.style.display==="none"){
-                    form.style.display="block"
+                    document.getElementById("testo1").textContent = data;
                 }
-                else {
-                    form.style.display="none"
-                }
+                this.reset();
             })
-            //funzione per mostrare o nascondere il form di login
-            const signinbtn=document.getElementById("signinbtn");
+    })
+    //funzione per mostrare o nascondere il form di registrazione
+    const togglbtn = document.getElementById("togglebtn")
+    const form = document.getElementById("signup")
+    const form2 = document.getElementById("signin");
+    togglbtn.addEventListener("click", () => {
+        if (form2.style.display === "block") {
+            form2.style.display = "none"
+        };
+        if (form.style.display === "none") {
+            form.style.display = "block"
+        }
+        else {
+            form.style.display = "none"
+        }
+    })
+    //funzione per mostrare o nascondere il form di login
+    const signinbtn = document.getElementById("signinbtn");
 
-            signinbtn.addEventListener("click",()=>{
-                if (form.style.display==="block"){
-                    form.style.display="none"
-                };
-                if(form2.style.display==="none"){
-                    form2.style.display="block"
-                }
-                else{
-                    form2.style.display="none"
-                }
-            });
-            
-            //funzione per controllo di conferma email e password
-            const mail1=document.getElementById("email");
-            const mail2=document.getElementById("email2");
-            const pass1=document.getElementById("password");
-            const pass2=document.getElementById("password2");
-            mail2.addEventListener("input", function(){
-                if(mail1.value !== mail2.value){
-                    mail2.setCustomValidity("Le email non corrispondono");
-                }
-                else {
-                    mail2.setCustomValidity("");
-                }
-            })
-            pass2.addEventListener("input", function(){
-                if(pass1.value !== pass2.value){
-                    pass2.setCustomValidity("Le passwordnon corrispondono");
-                }
-                else {
-                    pass2.setCustomValidity("");
-                }
-            })
-    </script>
+    signinbtn.addEventListener("click", () => {
+        if (form.style.display === "block") {
+            form.style.display = "none"
+        };
+        if (form2.style.display === "none") {
+            form2.style.display = "block"
+        }
+        else {
+            form2.style.display = "none"
+        }
+    });
+
+    //funzione per controllo di conferma email e password
+    const mail1 = document.getElementById("email");
+    const mail2 = document.getElementById("email2");
+    const pass1 = document.getElementById("password");
+    const pass2 = document.getElementById("password2");
+    mail2.addEventListener("input", function () {
+        if (mail1.value !== mail2.value) {
+            mail2.setCustomValidity("Le email non corrispondono");
+        }
+        else {
+            mail2.setCustomValidity("");
+        }
+    })
+    pass2.addEventListener("input", function () {
+        if (pass1.value !== pass2.value) {
+            pass2.setCustomValidity("Le passwordnon corrispondono");
+        }
+        else {
+            pass2.setCustomValidity("");
+        }
+    })
+</script>
 
 </html>
